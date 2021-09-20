@@ -6,5 +6,11 @@ namespace ShopRPG
 {
     class PLayer
     {
+        private int _gold;
+        private int Gold;
+        private Item[] _inventory;
+        private Item[] Inventory;
+
+
     }
 }

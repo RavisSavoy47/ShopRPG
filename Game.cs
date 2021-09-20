@@ -7,7 +7,10 @@ namespace ShopRPG
 
     class Game
     {
-        bool _gameOver = false;
+        private Shop _shop;
+        private PLayer _player;
+        private bool _gameOver = false;
+        private int _currentScene = 0;
         public void Run()
         {
             Start();
@@ -115,6 +118,15 @@ namespace ShopRPG
             }
         }
 
+        void GetShopMenuOptions()
+        {
+
+        }
+
+        void DisplayShopMenu()
+        {
+
+        }
     }    
 }
             
