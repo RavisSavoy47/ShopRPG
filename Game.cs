@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace ShopRPG
 {
+    public struct Item
+    {
+        public string Name;
+        public int Cost;
+    }
 
     class Game
     {
+
         private Shop _shop;
-        private PLayer _player;
-        private bool _gameOver = false;
-        private int _currentScene = 0;
+        private Player _player;
+        private bool _gameOver;
+        private int _currentScene;
+        private Item[] _ShopInventory;
         public void Run()
         {
             Start();
@@ -25,11 +33,20 @@ namespace ShopRPG
 
         public void InitializeItems()
         {
+            Item copySmash = new Item { Name = "A copy of Smash", Cost = 33};
+            Item shotGun = new Item { Name = "ShotGun", Cost = 36};
 
+            Item theFlops = new Item { Name = "Fresh Flops", Cost = 900};
+            Item trueDrip = new Item { Name = "The Drip", Cost = 1000};
+
+            _ShopInventory = new Item[] { copySmash, shotGun, theFlops, trueDrip };
         }
 
         public void Start()
         {
+            _gameOver = false;
+            _currentScene = 0;
+            InitializeItems();
 
         }
 
@@ -104,7 +121,21 @@ namespace ShopRPG
       
         void DisplayCurrentScene()
         {
+            switch (_currentScene)
+            {
+                case 0:
+                    DisplayOpeningScene();
+                    break;
+                case 1:
+                    GetShopMenuOptions();
+                    break;
+                case 2:
+                    DisplayShopMenu();
+                    break;
 
+                    Console.WriteLine("Invaild scene index");
+                    break;
+            }
         }
 
 
@@ -112,19 +143,83 @@ namespace ShopRPG
         {
             int choice = GetInput("Welcome to the RPG Shop Simulator!" + "What would you like to do?", "Start Shopping", "Load Inventory");
 
-            if (choice == 0)
+            switch (choice)
             {
+                case 0:
+                    _currentScene = 2;
+                    break;
+                case 1:
+                    if (Load())
+                    {
+                        Console.WriteLine("Load Successful");
+                        Console.ReadKey(true);
+                        Console.Clear();
+                        _currentScene = 3;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Load Failed.");
+                        Console.ReadKey(true);
+                        Console.Clear();
+                    }
 
             }
         }
 
-        void GetShopMenuOptions()
+        private string[] GetShopMenuOptions()
         {
+            string[] itemName = new string[_ShopInventory.Length + 2];
 
+            //Copy the values from the old array into the new array
+            for (int i = 0; i < _ShopInventory.Length; i++)
+            {
+                itemName[i] = _ShopInventory[i].Name;
+            }
+
+            itemName[_ShopInventory.Length - 1] = "Save";
+            itemName[_ShopInventory.Length] = "Exit";
+
+            return itemName;
+        }
+
+        public void PrintInventory(Item[] inventory)
+        {
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                Console.WriteLine((i + 1) + ". " + inventory[i].Name + inventory[i].Cost);
+            }
         }
 
         void DisplayShopMenu()
         {
+            Console.WriteLine("Welcome! Please selct an item.");
+            PrintInventory(_ShopInventory);
+
+            int input = Console.ReadKey().KeyChar;
+
+            int itemIndex = -1;
+            switch (input)
+            {
+                case '1':
+                    {
+                        itemIndex = 0;
+                        break;
+                    }
+                case '2':
+                    {
+                        itemIndex = 1;
+                        break;
+                    }
+                case '3':
+                    {
+                        itemIndex = 2;
+                        break;
+                    }
+                default:
+                    {
+                        return;
+                    }
+            }
 
         }
     }    
