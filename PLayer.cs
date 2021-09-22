@@ -4,13 +4,57 @@ using System.Text;
 
 namespace ShopRPG
 {
-    class PLayer
+    class Player
     {
         private int _gold;
-        private int Gold;
         private Item[] _inventory;
-        private Item[] Inventory;
 
+        public Item[] Inventory
+        {
+            get
+            {
+                return _inventory;
+            }
+        }
 
+        public int Gold
+        {
+            get
+            {
+                return _gold;
+            }
+        }
+
+        public Player()
+        {
+            _gold = 1000;
+
+            _inventory = new Item[4];
+        }
+
+        public bool Buy(Item item, int inventoryIndex)
+        {
+            if(_gold >= item.Cost)
+            {
+                _gold -= item.Cost;
+
+                _inventory[inventoryIndex] = item;
+                return true;
+            }
+
+            return false;
+        }
+
+        public string[] GetItemNames()
+        {
+            string[] itemNames = new string[_inventory.Length];
+
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                itemNames[i] = _inventory[i].Name;
+            }
+
+            return itemNames;
+        }
     }
 }
