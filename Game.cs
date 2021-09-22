@@ -49,22 +49,23 @@ namespace ShopRPG
 
         public void Start()
         {
-            _shop = new Shop(_ShopInventory);
-            _player = new Player();
+            InitializeItems();
             _gameOver = false;
             _currentScene = 0;
-            InitializeItems();
-
+           
+            _shop = new Shop(_ShopInventory);
+            _player = new Player();
         }
 
         public void Update()
         {
             DisplayCurrentScene();
+            Console.Clear();
         }
 
         public void End()
         {
-
+            Console.WriteLine("Thanks for shopping!");
         }
 
         int GetInput(string description, params string[] options)
@@ -117,15 +118,43 @@ namespace ShopRPG
 
         public void Save()
         {
+            bool loadSuccessfull = true;
 
+            //Create a new stream writer
+            StreamWriter writer = new StreamWriter("SaveData.txt");
+            //...return false
+            loadSuccessfull = false;
+        
+            //Save player 
+            _player.Save(writer);
+
+            //Close writer when done saving
+            writer.Close();
         }
 
-        public void Load()
+        public bool Load()
         {
+            bool loadSuccessfull = true;
 
+            //If the file exist..
+            if (!File.Exists("SaveData.txt"))
+                //..return false
+                loadSuccessfull = false;
+
+            //Create a new reader to read from the text file
+            StreamReader reader = new StreamReader("SaveData.txt");
+
+                _player = new Player();
+
+            if (!_player.Load(reader))
+                loadSuccessfull = false;
+
+            //Close the reader once loading is finished
+            reader.Close();
+            return loadSuccessfull;
         }
 
-      
+
         void DisplayCurrentScene()
         {
             switch (_currentScene)
@@ -151,14 +180,25 @@ namespace ShopRPG
             //Lets the player start the shop or load a save 
             int choice = GetInput("Welcome to the RPG Shop Simulator!" + "What would you like to do?", "Start Shopping", "Load Inventory");
 
-            switch (choice)
+            if (choice == 0)
             {
-                case 0:
+                _currentScene = 2;
+            }
+            else if (choice == 1)
+            {
+                if (Load())
+                {
+                    Console.WriteLine("Load Successful");
+                    Console.ReadKey(true);
+                    Console.Clear();
                     _currentScene = 2;
-                    break;
-                case 1:
-                    break;
-
+                }
+                else
+                {
+                    Console.WriteLine("Load Failed.");
+                    Console.ReadKey(true);
+                    Console.Clear();
+                }
             }
         }
 
@@ -189,7 +229,7 @@ namespace ShopRPG
                 Console.WriteLine(_player.GetItemNames()[i]);
             }
 
-            int choice = GetInput("Welcome! Please selct an item.", GetShopMenuOptions());
+            int choice = GetInput("\nWelcome! Please selct an item.", GetShopMenuOptions());
 
             switch (choice)
             {
@@ -225,6 +265,12 @@ namespace ShopRPG
                         }
                         break;
                     }
+                case 4:
+                    Save();
+                    break;
+                case 5:
+                    _gameOver = true;
+                    break;
                 default:
                     {
                         return;

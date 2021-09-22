@@ -21,13 +21,15 @@ namespace ShopRPG
         {
             Item itemYouWant = _inventory[itemIndex];
 
-            if (_gold >= itemYouWant.Cost)
+            if (player.Gold >= itemYouWant.Cost)
             {
                 return true;
             }
             else
             {
+                Console.Clear();
                 Console.WriteLine("You can't afford this item.");
+                Console.ReadKey(true);
             }
             return false;
         }
