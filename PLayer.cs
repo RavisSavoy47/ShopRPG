@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace ShopRPG
 {
@@ -32,17 +33,22 @@ namespace ShopRPG
             _inventory = new Item[4];
         }
 
-        public bool Buy(Item item, int inventoryIndex)
+        public void Buy(Item item)
         {
-            if(_gold >= item.Cost)
-            {
-                _gold -= item.Cost;
+            _gold -= item.Cost;
 
-                _inventory[inventoryIndex] = item;
-                return true;
+            Item[] GetItem = new Item[_inventory.Length + 1];
+
+
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                GetItem[i] = _inventory[i];
             }
 
-            return false;
+            GetItem[GetItem.Length - 1] = item;
+
+            _inventory = GetItem;
+
         }
 
         public string[] GetItemNames()

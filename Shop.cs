@@ -10,8 +10,6 @@ namespace ShopRPG
         private int _gold;
         private Item[] _inventory;
 
-
-
         public Shop(Item[] items)
         {
             _gold = 1000;
@@ -19,14 +17,17 @@ namespace ShopRPG
             _inventory = items;
         }
 
-        public bool Sell(Player player, int itemIndex, int playerIndex)
+        public bool Sell(Player player, int itemIndex)
         {
             Item itemYouWant = _inventory[itemIndex];
 
-            if (player.Buy(itemYouWant, playerIndex))
+            if (_gold >= itemYouWant.Cost)
             {
-                _gold += itemYouWant.Cost;
                 return true;
+            }
+            else
+            {
+                Console.WriteLine("You can't afford this item.");
             }
             return false;
         }

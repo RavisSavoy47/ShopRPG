@@ -19,6 +19,11 @@ namespace ShopRPG
         private bool _gameOver;
         private int _currentScene;
         private Item[] _ShopInventory;
+
+        private Item _copySmash;
+        private Item _shotGun;
+        private Item _theFlops;
+        private Item _trueDrip;
         public void Run()
         {
             Start();
@@ -33,17 +38,19 @@ namespace ShopRPG
 
         public void InitializeItems()
         {
-            Item copySmash = new Item { Name = "A copy of Smash", Cost = 33};
-            Item shotGun = new Item { Name = "ShotGun", Cost = 36};
+            _copySmash = new Item { Name = "A copy of Smash", Cost = 33};
+            _shotGun = new Item { Name = "ShotGun", Cost = 36};
+            _theFlops = new Item { Name = "Fresh Flops", Cost = 900};
+            _trueDrip = new Item { Name = "The Drip", Cost = 1000};
 
-            Item theFlops = new Item { Name = "Fresh Flops", Cost = 900};
-            Item trueDrip = new Item { Name = "The Drip", Cost = 1000};
-
-            _ShopInventory = new Item[] { copySmash, shotGun, theFlops, trueDrip };
+            _ShopInventory = new Item[] { _copySmash, _shotGun, _theFlops, _trueDrip };
+            
         }
 
         public void Start()
         {
+            _shop = new Shop(_ShopInventory);
+            _player = new Player();
             _gameOver = false;
             _currentScene = 0;
             InitializeItems();
@@ -141,6 +148,7 @@ namespace ShopRPG
 
         void DisplayOpeningScene()
         {
+            //Lets the player start the shop or load a save 
             int choice = GetInput("Welcome to the RPG Shop Simulator!" + "What would you like to do?", "Start Shopping", "Load Inventory");
 
             switch (choice)
@@ -149,19 +157,7 @@ namespace ShopRPG
                     _currentScene = 2;
                     break;
                 case 1:
-                    if (Load())
-                    {
-                        Console.WriteLine("Load Successful");
-                        Console.ReadKey(true);
-                        Console.Clear();
-                        _currentScene = 3;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Load Failed.");
-                        Console.ReadKey(true);
-                        Console.Clear();
-                    }
+                    break;
 
             }
         }
@@ -176,43 +172,57 @@ namespace ShopRPG
                 itemName[i] = _ShopInventory[i].Name;
             }
 
-            itemName[_ShopInventory.Length - 1] = "Save";
-            itemName[_ShopInventory.Length] = "Exit";
+            itemName[_ShopInventory.Length ] = "Save";
+            itemName[_ShopInventory.Length +1] = "Exit";
 
             return itemName;
         }
 
-        public void PrintInventory(Item[] inventory)
-        {
-            for (int i = 0; i < inventory.Length; i++)
-            {
-                Console.WriteLine((i + 1) + ". " + inventory[i].Name + inventory[i].Cost);
-            }
-        }
-
         void DisplayShopMenu()
         {
-            Console.WriteLine("Welcome! Please selct an item.");
-            PrintInventory(_ShopInventory);
+            //shows the player gold and inventory
+            Console.WriteLine("Your gold: " + _player.Gold);
+            Console.WriteLine("Your inventory: ");
 
-            int input = Console.ReadKey().KeyChar;
-
-            int itemIndex = -1;
-            switch (input)
+            for (int i = 0; i < _player.GetItemNames().Length; i++)
             {
-                case '1':
+                Console.WriteLine(_player.GetItemNames()[i]);
+            }
+
+            int choice = GetInput("Welcome! Please selct an item.", GetShopMenuOptions());
+
+            switch (choice)
+            {
+                case 0:
                     {
-                        itemIndex = 0;
+                        if (_shop.Sell(_player, 0))
+                        {
+                            _player.Buy(_copySmash);
+                        }
                         break;
                     }
-                case '2':
+                case 1:
                     {
-                        itemIndex = 1;
+                        if (_shop.Sell(_player, 1))
+                        {
+                            _player.Buy(_shotGun);
+                        }
                         break;
                     }
-                case '3':
+                case 2:
                     {
-                        itemIndex = 2;
+                        if (_shop.Sell(_player, 2))
+                        {
+                            _player.Buy(_theFlops);
+                        }
+                        break;
+                    }
+                case 3:
+                    {
+                        if (_shop.Sell(_player, 3))
+                        {
+                            _player.Buy(_trueDrip);
+                        }
                         break;
                     }
                 default:
@@ -220,7 +230,8 @@ namespace ShopRPG
                         return;
                     }
             }
-
+  
+            
         }
     }    
 }
