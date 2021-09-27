@@ -17,8 +17,28 @@ namespace ShopRPG
             _inventory = items;
         }
 
-        public bool Sell(Player player, int itemIndex)
+               public void Buy(Item item)
         {
+            _gold -= item.Cost;
+
+            Item[] GetItem = new Item[_inventory.Length + 1];
+
+
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                GetItem[i] = _inventory[i];
+            }
+
+            GetItem[GetItem.Length - 1] = item;
+
+            _inventory = GetItem;
+
+        }
+
+
+        public bool Sell(Player player, int choice)
+        {
+            int itemIndex = choice;
             Item itemYouWant = _inventory[itemIndex];
 
             if (player.Gold >= itemYouWant.Cost)

@@ -229,54 +229,29 @@ namespace ShopRPG
                 Console.WriteLine(_player.GetItemNames()[i]);
             }
 
-            int choice = GetInput("\nWelcome! Please selct an item.", GetShopMenuOptions());
+            //Condenses the code so that all the player input goes through 3 conditions
 
-            switch (choice)
+            //work on this later**
+            int choice;
+            string[] _shopInventory = _shop.GetItemNames();
+            if (Shop.Sell(_player, choice))
             {
-                case 0:
-                    {
-                        if (_shop.Sell(_player, 0))
-                        {
-                            _player.Buy(_copySmash);
-                        }
-                        break;
-                    }
-                case 1:
-                    {
-                        if (_shop.Sell(_player, 1))
-                        {
-                            _player.Buy(_shotGun);
-                        }
-                        break;
-                    }
-                case 2:
-                    {
-                        if (_shop.Sell(_player, 2))
-                        {
-                            _player.Buy(_theFlops);
-                        }
-                        break;
-                    }
-                case 3:
-                    {
-                        if (_shop.Sell(_player, 3))
-                        {
-                            _player.Buy(_trueDrip);
-                        }
-                        break;
-                    }
-                case 4:
-                    Save();
-                    break;
-                case 5:
-                    _gameOver = true;
-                    break;
-                default:
-                    {
-                        return;
-                    }
+                Console.WriteLine("You purchased the " + _shopInventory[choice]);
+
             }
-  
+            else if (choice == _shopInventory.Length)
+            {
+                Save();
+                Console.WriteLine("Saved Game");
+                Console.ReadKey(true);
+                Console.Clear();
+                return;
+            }
+            else if (choice == _shopInventory.Length + 1)
+            {
+                _gameOver = true;
+                return;
+            }
             
         }
     }    
