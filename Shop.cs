@@ -17,7 +17,11 @@ namespace ShopRPG
             _inventory = items;
         }
 
-               public void Buy(Item item)
+        /// <summary>
+        /// if the player has the amount of gold then they can buy the item
+        /// </summary>
+        /// <param name="item"></param>
+        public void Buy(Item item)
         {
             _gold -= item.Cost;
 
@@ -35,7 +39,12 @@ namespace ShopRPG
 
         }
 
-
+        /// <summary>
+        /// checks the amount of gold and if it has more then it lets the player buy it
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="choice"></param>
+        /// <returns></returns>
         public bool Sell(Player player, int choice)
         {
             int itemIndex = choice;
@@ -53,6 +62,11 @@ namespace ShopRPG
             }
             return false;
         }
+        
+        /// <summary>
+        /// Gives the items it names
+        /// </summary>
+        /// <returns></returns>
         public string[] GetItemNames()
         {
             string[] itemNames = new string[_inventory.Length];

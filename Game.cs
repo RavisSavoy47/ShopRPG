@@ -233,13 +233,14 @@ namespace ShopRPG
 
 
             int choice = GetInput("\nWelcome! Please selct an item.", GetShopMenuOptions());
-            string[] _shopInventory = _shop.GetItemNames();
+            string[] _ShopInventory = _shop.GetItemNames();
+
             if (_shop.Sell(_player, choice))
             {
-                Console.WriteLine("You purchased the " + _shopInventory[choice]);
+                Console.WriteLine("You purchased the " + _ShopInventory[choice]);
 
             }
-            else if (choice == _shopInventory.Length)
+            else if (choice == _ShopInventory.Length)
             {
                 Save();
                 Console.WriteLine("Saved Game");
@@ -247,7 +248,7 @@ namespace ShopRPG
                 Console.Clear();
                 return;
             }
-            else if (choice == _shopInventory.Length + 1)
+            else if (choice == _ShopInventory.Length + 1)
             {
                 _gameOver = true;
                 return;
