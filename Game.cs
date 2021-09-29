@@ -231,10 +231,10 @@ namespace ShopRPG
 
             //Condenses the code so that all the player input goes through 3 conditions
 
-            //work on this later**
-            int choice;
+
+            int choice = GetInput("\nWelcome! Please selct an item.", GetShopMenuOptions());
             string[] _shopInventory = _shop.GetItemNames();
-            if (Shop.Sell(_player, choice))
+            if (_shop.Sell(_player, choice))
             {
                 Console.WriteLine("You purchased the " + _shopInventory[choice]);
 
